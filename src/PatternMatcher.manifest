@@ -1,3 +1,6 @@
 Manifest-Version: 1.0
-Main-Class: de.jugms.patternmatcher.PatternMatcher
-Class-path:     
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.6.0_29-b11-402-11M3527 (Apple Inc.)
+Main-Class: de.dhiller.patternmatcher.PatternMatcher
+Class-Path: 
+

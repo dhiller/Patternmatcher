@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="PatternMatcher" default="jar" basedir=".">
-	<description>Builds, tests, and runs the project PatternMatcher.</description>
+	<description>Creates a runnable jar of PatternMatcher.</description>
 
 	<target name="jar">
 		<manifest file="dist/PatternMatcher.manifest">

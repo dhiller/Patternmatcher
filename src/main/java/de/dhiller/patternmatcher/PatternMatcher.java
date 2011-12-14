@@ -52,6 +52,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class PatternMatcher extends JFrame {
 
@@ -59,6 +61,73 @@ public class PatternMatcher extends JFrame {
     private final JTextField pattern = new JTextField();
     private final List<JTextArea> testStrings = new ArrayList<JTextArea>();
     private final JTextArea result = new JTextArea();
+
+    private final class TextFieldSizeAdapter implements DocumentListener {
+	private final JTextArea testString;
+
+	private TextFieldSizeAdapter(JTextArea testString) {
+	    this.testString = testString;
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+	    updateRows(testString);
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		    updateRows(testString);
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		    updateRows(testString);
+	}
+
+	private void updateRows(JTextArea testString) {
+	    testString.setRows(estimatedLines(testString.getText()));
+		    pack();
+	}
+    }
+
+    private final class AddAnotherTestStringField extends AbstractAction {
+
+	private AddAnotherTestStringField() {
+	    super("+");
+	    putValue(AbstractAction.LONG_DESCRIPTION, "Add another text area");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    prefs.put(
+	            "testStringText" + testStrings.size(),
+	            "new text here");
+	    PatternMatcher.this.getContentPane().removeAll();
+	    populateFrame();
+	}
+    }
+
+    private final class RemoveLevelFromBackslashes extends AbstractAction {
+	private RemoveLevelFromBackslashes() {
+	    super("\\");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    pattern.setText(pattern.getText().replace("\\\\", "\\"));
+	}
+    }
+
+    private final class AddLevelToBackslashes extends AbstractAction {
+	private AddLevelToBackslashes() {
+	    super("\\\\");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    pattern.setText(pattern.getText().replace("\\", "\\\\"));
+	}
+    }
 
     private final class CheckAction extends AbstractAction {
 
@@ -113,7 +182,8 @@ public class PatternMatcher extends JFrame {
                     } while (find = matcher2.find());
                     result.append("\n");
                 }
-                pack();
+		result.setRows(estimatedLines(result.getText()));
+		// pack();
             } catch (Exception ex) {
                 JTextArea textarea = new JTextArea(ex.getMessage());
                 textarea.setFont(new Font("Monospaced", Font.PLAIN, 16));
@@ -139,7 +209,74 @@ public class PatternMatcher extends JFrame {
     }
 
     private void populateFrame() {
+        addPatternRow();
+        addTestStringsLabel();
+        int index = 0;
+        String testStringText = "";
+        testStrings.clear();
+        do {
+            testStringText = testStringTextFromPreferences(index);
+			final JTextArea testString = new JTextArea();
+			testString.setLineWrap(true);
+			testString.setText(testStringText);
+	    testString.setRows(estimatedLines(testStringText));
+	    testString.getDocument().addDocumentListener(new TextFieldSizeAdapter(testString));
+            testStrings.add(testString);
+            getContentPane().add(
+                    new JScrollPane(testString),
+		    new GridBagConstraints(1, 1 + index, 3, 1, 1.0, 0.0,
+			    GridBagConstraints.WEST,
+			    GridBagConstraints.HORIZONTAL,
+			    new Insets(2, 2, 2, 2), 0, 20));
+            if (index == 0) {
+                addAnotherTestStringFieldButtonOnFirstRow();
+            }
+            index++;
+	} while (!testStringText.trim().isEmpty());
         getContentPane().add(
+                new JButton(new CheckAction()),
+                new GridBagConstraints(2, 2 + index, 2, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.NONE,
+                new Insets(2, 2, 2, 2), 0, 0));
+	result.setText("\n\n\n");
+	result.setRows(estimatedLines(result.getText()));
+        getContentPane().add(
+                new JScrollPane(result),
+		new GridBagConstraints(0, 3 + index, 4, 1, 1.0, 1.0,
+			GridBagConstraints.WEST, GridBagConstraints.BOTH,
+			new Insets(2, 2, 2, 2), 0, 20));
+        pack();
+    }
+
+    private int estimatedLines(String text) {
+	return (int) (((text.length() / 80) + 1 + text
+		.replaceAll("[^\\n]+", "").length()) / 2);
+    }
+
+    private String testStringTextFromPreferences(int index) {
+	return prefs.get("testStringText" + index, "");
+    }
+
+    private void addAnotherTestStringFieldButtonOnFirstRow() {
+	getContentPane().add(
+	        new JButton(new AddAnotherTestStringField()),
+		new GridBagConstraints(4, 1, 3, 1, 0.0, 0.0,
+	        GridBagConstraints.WEST,
+	        GridBagConstraints.NONE,
+	        new Insets(2, 2, 2, 2), 0, 0));
+    }
+
+    private void addTestStringsLabel() {
+	getContentPane().add(
+                new JLabel("Teststring"),
+                new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.NORTHEAST,
+                GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2),
+                0, 0));
+    }
+
+    private void addPatternRow() {
+	getContentPane().add(
                 new JLabel("Pattern"),
                 new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
@@ -151,83 +288,15 @@ public class PatternMatcher extends JFrame {
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                 new Insets(2, 2, 2, 2), 50, 0));
         getContentPane().add(
-                new JButton(new AbstractAction("\\\\") {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pattern.setText(pattern.getText().replace("\\", "\\\\"));
-            }
-        }),
+                new JButton(new AddLevelToBackslashes()),
                 new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.NONE,
                 new Insets(2, 2, 2, 2), 0, 0));
         getContentPane().add(
-                new JButton(new AbstractAction("\\") {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pattern.setText(pattern.getText().replace("\\\\", "\\"));
-            }
-        }),
+		new JButton(new RemoveLevelFromBackslashes()),
                 new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets(2, 2, 2, 2), 0, 0));
-        getContentPane().add(
-                new JLabel("Teststring"),
-                new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-                GridBagConstraints.NORTHEAST,
-                GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2),
-                0, 0));
-        int index = 0;
-        String testStringText = "";
-        testStrings.clear();
-        do {
-            testStringText = prefs.get("testStringText" + index, "");
-			JTextArea testString = new JTextArea();
-			testString.setLineWrap(true);
-			testString.setText(testStringText);
-            testStrings.add(testString);
-            getContentPane().add(
-                    new JScrollPane(testString),
-                    new GridBagConstraints(1, 1 + index, 3, 1, 0.1, 0.1,
-                    GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                    new Insets(2, 2, 2, 2), 0, 0));
-            if (index == 0) {
-                getContentPane().add(
-                        new JButton(new AbstractAction("+") {
-
-                    {
-                        putValue(AbstractAction.LONG_DESCRIPTION,
-                                "Add another text area");
-                    }
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        prefs.put(
-                                "testStringText" + testStrings.size(),
-                                "new text here");
-                        PatternMatcher.this.getContentPane().removeAll();
-                        populateFrame();
-                    }
-                }),
-                        new GridBagConstraints(4, 1 + index, 3, 1, 0.0, 0.0,
-                        GridBagConstraints.WEST,
-                        GridBagConstraints.NONE,
-                        new Insets(2, 2, 2, 2), 0, 0));
-            }
-            index++;
-        } while (testStringText != null && !testStringText.trim().isEmpty());
-        getContentPane().add(
-                new JButton(new CheckAction()),
-                new GridBagConstraints(2, 2 + index, 2, 1, 0.0, 0.0,
-                GridBagConstraints.EAST, GridBagConstraints.NONE,
-                new Insets(2, 2, 2, 2), 0, 0));
-        getContentPane().add(
-                new JScrollPane(result),
-                new GridBagConstraints(0, 3 + index, 4, 1, 0.0, 0.5,
-                GridBagConstraints.WEST, GridBagConstraints.BOTH,
-                new Insets(2, 2, 2, 2), 250, 100));
-        pack();
     }
 
     public static void main(String[] args) {

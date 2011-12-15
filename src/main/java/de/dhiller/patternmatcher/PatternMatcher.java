@@ -54,6 +54,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 
 public class PatternMatcher extends JFrame {
 
@@ -85,7 +86,7 @@ public class PatternMatcher extends JFrame {
 	}
 
 	private void updateRows(JTextArea testString) {
-	    testString.setRows(estimatedLines(testString.getText()));
+	    testString.setRows(estimatedRows(testString));
 		    pack();
 	}
     }
@@ -219,7 +220,8 @@ public class PatternMatcher extends JFrame {
 			final JTextArea testString = new JTextArea();
 			testString.setLineWrap(true);
 			testString.setText(testStringText);
-	    testString.setRows(estimatedLines(testStringText));
+	    testString.setColumns(80);
+	    testString.setRows(estimatedRows(testString));
 	    testString.getDocument().addDocumentListener(new TextFieldSizeAdapter(testString));
             testStrings.add(testString);
             getContentPane().add(
@@ -251,6 +253,11 @@ public class PatternMatcher extends JFrame {
     private int estimatedLines(String text) {
 	return (int) (((text.length() / 80) + 1 + text
 		.replaceAll("[^\\n]+", "").length()) / 2);
+    }
+
+    private int estimatedRows(JTextArea text) {
+	return (int) (((text.getText().length() / text.getColumns()) + 1 + text
+		.getText().replaceAll("[^\\n]+", "").length()) / 2);
     }
 
     private String testStringTextFromPreferences(int index) {

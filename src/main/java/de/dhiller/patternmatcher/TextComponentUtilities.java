@@ -22,26 +22,14 @@
 
 package de.dhiller.patternmatcher;
 
-import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
 
-import javax.swing.AbstractAction;
+class TextComponentUtilities {
 
-final class AddAnotherTestStringField extends AbstractAction {
-
-    /**
-     */
-    private final PatternMatcher patternMatcher;
-
-    AddAnotherTestStringField(PatternMatcher patternMatcher) {
-        super("+");
-        this.patternMatcher = patternMatcher;
-        putValue(AbstractAction.LONG_DESCRIPTION, "Add another text area");
+    static int estimatedRows(JTextArea text) {
+        return (int) (((text.getText().length() / (text.getColumns() > 0 ? text
+    	    .getColumns() : 80)) + 1 + text.getText()
+    	    .replaceAll("[^\\n]+", "").length()) / 2);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        PatternMatcher.prefs.put("testStringText" + this.patternMatcher.testStringTexts().size(),
-    	    "new text here");
-        this.patternMatcher.reconfigureTextFieldsForPatternTest();
-    }
 }

@@ -61,50 +61,25 @@ public class PatternMatcher extends JFrame {
 	super("Regex Matcher");
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 	configureTextFieldsAndResultArea();
-	configureNorthPanel();
-	configureUpperArea();
+	configurePatternInputArea();
+	configureTestStringsInputArea();
 	configureLowerArea();
-	configureTextFieldsForPatternTest();
+	reconfigureTextFieldsForPatternTest();
     }
 
-    private void configureTextFieldsAndResultArea() {
-	centerSplitArea.setOrientation(JSplitPane.VERTICAL_SPLIT);
-	add(centerSplitArea);
+    List<String> testStringTexts() {
+	int index2 = 0;
+	final List<String> testStringTexts = new ArrayList<String>();
+	String testStringTextFromPreferences;
+	while (!(testStringTextFromPreferences = prefs.get("testStringText" + index2, ""))
+		.isEmpty()) {
+	    testStringTexts.add(testStringTextFromPreferences);
+	    index2++;
+	}
+	return testStringTexts;
     }
 
-    private void configureLowerArea() {
-	resultContainer.setLayout(new GridBagLayout());
-	result.setText("\n\n\n");
-	resultContainer.add(new JScrollPane(result), new GridBagConstraints(0,
-		0, 4, 1, 1.0, 1.0, GridBagConstraints.WEST,
-		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 20));
-	centerSplitArea.setRightComponent(resultContainer);
-    }
-
-    private void configureUpperArea() {
-	upper.setLayout(new GridBagLayout());
-	upper.add(labelTestString, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		new Insets(2, 2, 2, 2), 0, 0));
-	upper.add(new JScrollPane(textAreaContainer), new GridBagConstraints(1,
-		0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
-	upperButtons.setLayout(new GridBagLayout());
-	addAnotherTestStringFieldButtonOnFirstRow();
-	addCheckButton();
-	upper.add(upperButtons, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
-		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		new Insets(2, 2, 2, 2), 0, 0));
-	centerSplitArea.setLeftComponent(upper);
-    }
-
-    private void configureNorthPanel() {
-	northPanel.setLayout(new GridBagLayout());
-	add(northPanel, BorderLayout.NORTH);
-	addPatternRow();
-    }
-
-    void configureTextFieldsForPatternTest() {
+    void reconfigureTextFieldsForPatternTest() {
 	textAreaContainer.removeAll();
 	textAreaContainer.setLayout(new GridBagLayout());
 	testStrings.clear();
@@ -123,61 +98,40 @@ public class PatternMatcher extends JFrame {
 	upper.repaint();
     }
 
-    private JTextArea newTestStringArea(String testStringText) {
-	final JTextArea testString = new JTextArea();
-	testString.setLineWrap(true);
-	testString.setText(testStringText);
-	testString.setColumns(80);
-	testString.setRows(estimatedRows(testString));
-	testString.getDocument().addDocumentListener(
-	    new TextFieldSizeAdapter(this, testString));
-	return testString;
+    private void configureTextFieldsAndResultArea() {
+	centerSplitArea.setOrientation(JSplitPane.VERTICAL_SPLIT);
+	add(centerSplitArea);
     }
 
-    private void addFillingPanel() {
-	textAreaContainer.add(new JPanel(), new GridBagConstraints(1,
-		testStrings.size(), 1, 1, 0.0, 1.0,
-		GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+    private void configureLowerArea() {
+	resultContainer.setLayout(new GridBagLayout());
+	result.setText("\n\n\n");
+	resultContainer.add(new JScrollPane(result), new GridBagConstraints(0,
+		0, 4, 1, 1.0, 1.0, GridBagConstraints.WEST,
+		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 20));
+	centerSplitArea.setRightComponent(resultContainer);
+    }
+
+    private void configureTestStringsInputArea() {
+	upper.setLayout(new GridBagLayout());
+	upper.add(labelTestString, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		new Insets(2, 2, 2, 2), 0, 0));
+	upper.add(new JScrollPane(textAreaContainer), new GridBagConstraints(1,
+		0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
+		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
+	upperButtons.setLayout(new GridBagLayout());
+	addAnotherTestStringFieldButtonOnFirstRow();
+	addCheckButton();
+	upper.add(upperButtons, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+		new Insets(2, 2, 2, 2), 0, 0));
+	centerSplitArea.setLeftComponent(upper);
     }
 
-    List<String> testStringTexts() {
-	int index2 = 0;
-	final List<String> testStringTexts = new ArrayList<String>();
-	String testStringTextFromPreferences;
-	while (!(testStringTextFromPreferences = testStringTextFromPreferences(index2))
-		.isEmpty()) {
-	    testStringTexts.add(testStringTextFromPreferences);
-	    index2++;
-	}
-	return testStringTexts;
-    }
-
-    private void addCheckButton() {
-	upperButtons.add(new JButton(new CheckAction(this)),
-		new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-			GridBagConstraints.EAST, GridBagConstraints.NONE,
-			new Insets(2, 2, 2, 2), 0, 0));
-    }
-
-    int estimatedRows(JTextArea text) {
-	return (int) (((text.getText().length() / (text.getColumns() > 0 ? text
-		.getColumns() : 80)) + 1 + text.getText()
-		.replaceAll("[^\\n]+", "").length()) / 2);
-    }
-
-    private String testStringTextFromPreferences(int index) {
-	return prefs.get("testStringText" + index, "");
-    }
-
-    private void addAnotherTestStringFieldButtonOnFirstRow() {
-	upperButtons.add(new JButton(new AddAnotherTestStringField(this)),
-		new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-			GridBagConstraints.WEST, GridBagConstraints.NONE,
-			new Insets(2, 2, 2, 2), 0, 0));
-    }
-
-    private void addPatternRow() {
+    private void configurePatternInputArea() {
+	northPanel.setLayout(new GridBagLayout());
+	add(northPanel, BorderLayout.NORTH);
 	northPanel.add(new JLabel("Pattern"), new GridBagConstraints(0, 0, 1,
 		1, 0.0, 0.0, GridBagConstraints.WEST,
 		GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
@@ -191,6 +145,38 @@ public class PatternMatcher extends JFrame {
 			new Insets(2, 2, 2, 2), 0, 0));
 	northPanel.add(new JButton(new RemoveLevelFromBackslashes(this)),
 		new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
+			GridBagConstraints.WEST, GridBagConstraints.NONE,
+			new Insets(2, 2, 2, 2), 0, 0));
+    }
+
+    private JTextArea newTestStringArea(String testStringText) {
+	final JTextArea testString = new JTextArea();
+	testString.setLineWrap(true);
+	testString.setText(testStringText);
+	testString.setColumns(80);
+	testString.setRows(TextComponentUtilities.estimatedRows(testString));
+	testString.getDocument().addDocumentListener(
+	    new TextFieldSizeAdapter(this, testString));
+	return testString;
+    }
+
+    private void addFillingPanel() {
+	textAreaContainer.add(new JPanel(), new GridBagConstraints(1,
+		testStrings.size(), 1, 1, 0.0, 1.0,
+		GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+		new Insets(2, 2, 2, 2), 0, 0));
+    }
+
+    private void addCheckButton() {
+	upperButtons.add(new JButton(new CheckAction(this)),
+		new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+			GridBagConstraints.EAST, GridBagConstraints.NONE,
+			new Insets(2, 2, 2, 2), 0, 0));
+    }
+
+    private void addAnotherTestStringFieldButtonOnFirstRow() {
+	upperButtons.add(new JButton(new AddAnotherTestStringField(this)),
+		new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.WEST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));
     }

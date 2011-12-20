@@ -44,8 +44,6 @@ import javax.swing.text.JTextComponent;
 
 public class PatternMatcher extends JFrame {
 
-    static final Preferences prefs = Preferences
-	    .userNodeForPackage(PatternMatcher.class);
     final JTextField pattern = new JTextField();
     final List<JTextArea> testStrings = new ArrayList<JTextArea>();
     final JTextArea result = new JTextArea();
@@ -67,23 +65,11 @@ public class PatternMatcher extends JFrame {
 	reconfigureTextFieldsForPatternTest();
     }
 
-    List<String> testStringTexts() {
-	int index2 = 0;
-	final List<String> testStringTexts = new ArrayList<String>();
-	String testStringTextFromPreferences;
-	while (!(testStringTextFromPreferences = prefs.get("testStringText" + index2, ""))
-		.isEmpty()) {
-	    testStringTexts.add(testStringTextFromPreferences);
-	    index2++;
-	}
-	return testStringTexts;
-    }
-
     void reconfigureTextFieldsForPatternTest() {
 	textAreaContainer.removeAll();
 	textAreaContainer.setLayout(new GridBagLayout());
 	testStrings.clear();
-	for (String testStringText : testStringTexts()) {
+	for (String testStringText : MatcherPreferences.retrieveTestStringTexts()) {
 	    final JTextArea testString = newTestStringArea(testStringText);
 	    testStrings.add(testString);
 	    textAreaContainer.add(new JScrollPane(testString),
@@ -135,7 +121,7 @@ public class PatternMatcher extends JFrame {
 	northPanel.add(new JLabel("Pattern"), new GridBagConstraints(0, 0, 1,
 		1, 0.0, 0.0, GridBagConstraints.WEST,
 		GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
-	pattern.setText(prefs.get("patternText", ""));
+	pattern.setText(MatcherPreferences.retrievePatternText());
 	northPanel.add(pattern, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
 		GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 		new Insets(2, 2, 2, 2), 50, 0));
@@ -156,7 +142,7 @@ public class PatternMatcher extends JFrame {
 	testString.setColumns(80);
 	testString.setRows(TextComponentUtilities.estimatedRows(testString));
 	testString.getDocument().addDocumentListener(
-	    new TextFieldSizeAdapter(this, testString));
+		new TextFieldSizeAdapter(this, testString));
 	return testString;
     }
 

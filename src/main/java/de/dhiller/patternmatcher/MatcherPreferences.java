@@ -22,23 +22,45 @@
 
 package de.dhiller.patternmatcher;
 
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.prefs.Preferences;
 
-import javax.swing.AbstractAction;
+class MatcherPreferences {
 
-final class AddAnotherTestStringField extends AbstractAction {
+    static final String TEST_STRING_TEXT_PREFERENCES_KEY = "testStringText"; //$NON-NLS-1$
+    static final String PATTERN_TEXT_PREFERENCES_KEY = "patternText"; //$NON-NLS-1$
 
-    private final PatternMatcher patternMatcher;
+    private static final Preferences preferences = Preferences
+	    .userNodeForPackage(PatternMatcher.class);
 
-    AddAnotherTestStringField(PatternMatcher patternMatcher) {
-        super("+");
-        this.patternMatcher = patternMatcher;
-        putValue(AbstractAction.LONG_DESCRIPTION, "Add another text area");
+    static void storeTestStringText(final int index, final String newText) {
+        preferences().put(MatcherPreferences.TEST_STRING_TEXT_PREFERENCES_KEY + index,
+    	    newText);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        MatcherPreferences.storeTestStringText(MatcherPreferences.retrieveTestStringTexts().size(), "new text here");
-        this.patternMatcher.reconfigureTextFieldsForPatternTest();
+    static List<String> retrieveTestStringTexts() {
+        int index = 0;
+        final List<String> testStringTexts = new ArrayList<String>();
+        String testStringTextFromPreferences;
+        while (!(testStringTextFromPreferences = preferences().get(
+		TEST_STRING_TEXT_PREFERENCES_KEY + index, "")).isEmpty()) {
+            testStringTexts.add(testStringTextFromPreferences);
+            index++;
+        }
+        return testStringTexts;
     }
+
+    static void storePatternText(String patternText) {
+	preferences().put(PATTERN_TEXT_PREFERENCES_KEY, patternText);
+    }
+
+    static String retrievePatternText() {
+	return preferences().get(PATTERN_TEXT_PREFERENCES_KEY, "");
+    }
+
+    private static Preferences preferences() {
+	return preferences;
+    }
+
 }

@@ -49,17 +49,17 @@ final class CheckAction extends AbstractAction {
         this.patternMatcher.result.setText("");
         try {
     	String patternText = this.patternMatcher.pattern.getText();
-    	PatternMatcher.prefs.put("patternText", patternText);
+    	MatcherPreferences.storePatternText(patternText);
     	final List<String> testStringTexts = new ArrayList<String>();
     	for (int i = 0, n = this.patternMatcher.testStrings.size(); i < n; i++) {
     	    final JTextArea t = this.patternMatcher.testStrings.get(i);
     	    String testStringText = t.getText();
     	    if (testStringText.trim().isEmpty()) {
-    		PatternMatcher.prefs.put("testStringText" + i, "");
+		    MatcherPreferences.storeTestStringText(i, "");
     		continue;
     	    }
     	    testStringTexts.add(testStringText);
-    	    PatternMatcher.prefs.put("testStringText" + i, testStringText);
+		MatcherPreferences.storeTestStringText(i, testStringText);
     	    Pattern compiledPattern = Pattern.compile(patternText);
     	    Matcher matcher = compiledPattern.matcher(testStringText);
     	    String resultLabel = "Field "

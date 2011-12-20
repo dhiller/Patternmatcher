@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011, dhiller, http://www.dhiller.de Daniel Hiller, Warendorfer Str. 47, 48231 Warendorf, NRW,
+ * Copyright (c) 2011, dhiller, http://www.dhiller.de Daniel Hiller, Warendorfer Str. 47, 48231 Warendorf, NRW,
  * Germany, All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2011, dhiller, http://www.dhiller.de
+ * Copyright (c) 2011, dhiller, http://www.dhiller.de
  * Daniel Hiller, Warendorfer Str. 47, 48231 Warendorf, NRW, Germany, 
  * All rights reserved.
  * 
@@ -63,6 +63,17 @@ public class PatternMatcher extends JFrame {
 	configureTestStringsInputArea();
 	configureLowerArea();
 	reconfigureTextFieldsForPatternTest();
+    }
+
+    public static void main(String[] args) {
+	SwingUtilities.invokeLater(new Runnable() {
+
+	    public void run() {
+		PatternMatcher patternMatcher = new PatternMatcher();
+		patternMatcher.setVisible(true);
+		patternMatcher.pack();
+	    }
+	});
     }
 
     void reconfigureTextFieldsForPatternTest() {
@@ -167,14 +178,4 @@ public class PatternMatcher extends JFrame {
 			new Insets(2, 2, 2, 2), 0, 0));
     }
 
-    public static void main(String[] args) {
-	SwingUtilities.invokeLater(new Runnable() {
-
-	    public void run() {
-		PatternMatcher patternMatcher = new PatternMatcher();
-		patternMatcher.setVisible(true);
-		patternMatcher.pack();
-	    }
-	});
-    }
 }

@@ -47,7 +47,7 @@ public class PatternMatcher extends JFrame {
     final JTextField pattern = new JTextField();
     final List<JTextArea> testStrings = new ArrayList<JTextArea>();
     final JTextArea result = new JTextArea();
-    private final JSplitPane centerSplitArea = new JSplitPane();
+    private final JTabbedPane centerAreaTabbedPane = new JTabbedPane();
     private final JPanel northPanel = new JPanel();
     private final JPanel resultContainer = new JPanel();
     private final JPanel textAreaContainer = new JPanel();
@@ -58,11 +58,11 @@ public class PatternMatcher extends JFrame {
     private PatternMatcher() {
 	super("Regex Matcher");
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
-	configureTextFieldsAndResultArea();
 	configurePatternInputArea();
 	configureTestStringsInputArea();
-	configureLowerArea();
+	configureResultArea();
 	reconfigureTextFieldsForPatternTest();
+	configureAreas();
     }
 
     public static void main(String[] args) {
@@ -80,7 +80,8 @@ public class PatternMatcher extends JFrame {
 	textAreaContainer.removeAll();
 	textAreaContainer.setLayout(new GridBagLayout());
 	testStrings.clear();
-	for (String testStringText : MatcherPreferences.retrieveTestStringTexts()) {
+	for (String testStringText : MatcherPreferences
+		.retrieveTestStringTexts()) {
 	    final JTextArea testString = newTestStringArea(testStringText);
 	    testStrings.add(testString);
 	    textAreaContainer.add(new JScrollPane(testString),
@@ -95,18 +96,22 @@ public class PatternMatcher extends JFrame {
 	upper.repaint();
     }
 
-    private void configureTextFieldsAndResultArea() {
-	centerSplitArea.setOrientation(JSplitPane.VERTICAL_SPLIT);
-	add(centerSplitArea);
+    void showResult() {
+	centerAreaTabbedPane.setSelectedIndex(1);
     }
 
-    private void configureLowerArea() {
+    private void configureAreas() {
+	centerAreaTabbedPane.addTab("Test strings", upper);
+	centerAreaTabbedPane.addTab("Test results", resultContainer);
+	add(centerAreaTabbedPane);
+    }
+
+    private void configureResultArea() {
 	resultContainer.setLayout(new GridBagLayout());
 	result.setText("\n\n\n");
 	resultContainer.add(new JScrollPane(result), new GridBagConstraints(0,
 		0, 4, 1, 1.0, 1.0, GridBagConstraints.WEST,
 		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 20));
-	centerSplitArea.setRightComponent(resultContainer);
     }
 
     private void configureTestStringsInputArea() {
@@ -124,7 +129,6 @@ public class PatternMatcher extends JFrame {
 	upper.add(upperButtons, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		new Insets(2, 2, 2, 2), 0, 0));
-	centerSplitArea.setLeftComponent(upper);
     }
 
     private void configurePatternInputArea() {
@@ -141,7 +145,8 @@ public class PatternMatcher extends JFrame {
 		new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.EAST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));
-	northPanel.add(new JButton(new RemoveLevelFromBackslashes(this.pattern)),
+	northPanel.add(
+		new JButton(new RemoveLevelFromBackslashes(this.pattern)),
 		new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.WEST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));

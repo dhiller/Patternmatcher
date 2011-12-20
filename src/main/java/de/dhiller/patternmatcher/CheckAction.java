@@ -92,6 +92,7 @@ final class CheckAction extends AbstractAction {
     	}
 	PatternMatcher r = this.patternMatcher;
     	this.patternMatcher.result.setRows(TextComponentUtilities.estimatedRows(this.patternMatcher.result));
+	    this.patternMatcher.showResult();
         } catch (Exception ex) {
     	JTextArea textarea = new JTextArea(ex.getMessage());
     	textarea.setFont(new Font("Monospaced", Font.PLAIN, 16));

@@ -101,8 +101,8 @@ public class PatternMatcher extends JFrame {
     }
 
     private void configureAreas() {
-	centerAreaTabbedPane.addTab("Test strings", upper);
-	centerAreaTabbedPane.addTab("Test results", resultContainer);
+	centerAreaTabbedPane.addTab("Input", upper);
+	centerAreaTabbedPane.addTab("Results", resultContainer);
 	add(centerAreaTabbedPane);
     }
 
@@ -116,17 +116,14 @@ public class PatternMatcher extends JFrame {
 
     private void configureTestStringsInputArea() {
 	upper.setLayout(new GridBagLayout());
-	upper.add(labelTestString, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		new Insets(2, 2, 2, 2), 0, 0));
-	upper.add(new JScrollPane(textAreaContainer), new GridBagConstraints(1,
+	upper.add(new JScrollPane(textAreaContainer), new GridBagConstraints(0,
 		0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
 		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 	upperButtons.setLayout(new GridBagLayout());
 	addAnotherTestStringFieldButtonOnFirstRow();
 	addRemoveTestStringFieldButtonOnFirstRow();
 	addCheckButton();
-	upper.add(upperButtons, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+	upper.add(upperButtons, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		new Insets(2, 2, 2, 2), 0, 0));
     }

@@ -136,11 +136,11 @@ public class PatternMatcher extends JFrame {
 	northPanel.add(pattern, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
 		GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 		new Insets(2, 2, 2, 2), 50, 0));
-	northPanel.add(new JButton(new AddLevelToBackslashes(this)),
+	northPanel.add(new JButton(new AddLevelToBackslashes(this.pattern)),
 		new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.EAST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));
-	northPanel.add(new JButton(new RemoveLevelFromBackslashes(this)),
+	northPanel.add(new JButton(new RemoveLevelFromBackslashes(this.pattern)),
 		new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.WEST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));

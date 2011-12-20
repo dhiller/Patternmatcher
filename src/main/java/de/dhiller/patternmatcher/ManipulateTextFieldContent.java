@@ -22,19 +22,20 @@
 
 package de.dhiller.patternmatcher;
 
-import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
 import javax.swing.JTextField;
 
-final class RemoveLevelFromBackslashes extends ManipulateTextFieldContent {
+abstract class ManipulateTextFieldContent extends AbstractAction {
 
-    RemoveLevelFromBackslashes(JTextField field) {
-	super("\\", field);
+    private final JTextField field;
+
+    ManipulateTextFieldContent(String label, JTextField field) {
+	super(label);
+	this.field = field;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-	field().setText(field().getText().replace("\\\\", "\\"));
+    protected JTextField field() {
+	return field;
     }
+
 }

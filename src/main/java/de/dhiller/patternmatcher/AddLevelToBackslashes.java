@@ -24,20 +24,18 @@ package de.dhiller.patternmatcher;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
+import javax.swing.JTextField;
 
-final class AddLevelToBackslashes extends AbstractAction {
-    /**
-     */
-    private final PatternMatcher patternMatcher;
+final class AddLevelToBackslashes extends ManipulateTextFieldContent {
 
-    AddLevelToBackslashes(PatternMatcher patternMatcher) {
-        super("\\\\");
-        this.patternMatcher = patternMatcher;
+
+    AddLevelToBackslashes(JTextField textField) {
+	super("\\\\", textField);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.patternMatcher.pattern.setText(this.patternMatcher.pattern.getText().replace("\\", "\\\\"));
+	field().setText(field().getText().replace("\\", "\\\\"));
     }
+
 }

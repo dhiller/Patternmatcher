@@ -119,6 +119,7 @@ public class PatternMatcher extends JFrame {
 		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));
 	upperButtons.setLayout(new GridBagLayout());
 	addAnotherTestStringFieldButtonOnFirstRow();
+	addRemoveTestStringFieldButtonOnFirstRow();
 	addCheckButton();
 	upper.add(upperButtons, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 		GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
@@ -166,8 +167,8 @@ public class PatternMatcher extends JFrame {
 
     private void addCheckButton() {
 	upperButtons.add(new JButton(new CheckAction(this)),
-		new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-			GridBagConstraints.EAST, GridBagConstraints.NONE,
+		new GridBagConstraints(0, 1, 2, 1, 0.0, 0.0,
+			GridBagConstraints.WEST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));
     }
 
@@ -176,6 +177,13 @@ public class PatternMatcher extends JFrame {
 		new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.WEST, GridBagConstraints.NONE,
 			new Insets(2, 2, 2, 2), 0, 0));
+    }
+
+    private void addRemoveTestStringFieldButtonOnFirstRow() {
+	final RemoveTestStringField a = new RemoveTestStringField(this);
+	upperButtons.add(new JButton(a), new GridBagConstraints(1, 0, 1, 1,
+		0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+		new Insets(2, 2, 2, 2), 0, 0));
     }
 
 }

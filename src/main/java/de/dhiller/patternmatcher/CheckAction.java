@@ -55,7 +55,7 @@ final class CheckAction extends AbstractAction {
     	    final JTextArea t = this.patternMatcher.testStrings.get(i);
     	    String testStringText = t.getText();
     	    if (testStringText.trim().isEmpty()) {
-		    MatcherPreferences.storeTestStringText(i, "");
+		    MatcherPreferences.removeTestStringText(i);
     		continue;
     	    }
     	    testStringTexts.add(testStringText);

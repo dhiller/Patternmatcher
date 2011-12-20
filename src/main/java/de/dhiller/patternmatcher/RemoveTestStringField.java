@@ -22,57 +22,18 @@
 
 package de.dhiller.patternmatcher;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.prefs.Preferences;
+import java.awt.event.ActionEvent;
 
-class MatcherPreferences {
+final class RemoveTestStringField extends ChangeTextFields {
 
-    static final String TEST_STRING_TEXT_PREFERENCES_KEY = "testStringText"; //$NON-NLS-1$
-    static final String PATTERN_TEXT_PREFERENCES_KEY = "patternText"; //$NON-NLS-1$
-
-    private static final Preferences preferences = Preferences
-	    .userNodeForPackage(PatternMatcher.class);
-
-    static void storeTestStringText(final int index, final String newText) {
-        preferences().put(MatcherPreferences.TEST_STRING_TEXT_PREFERENCES_KEY + index,
-    	    newText);
+    RemoveTestStringField(PatternMatcher patternMatcher) {
+	super("-", "Remove text area", patternMatcher);
     }
 
-    static List<String> retrieveTestStringTexts() {
-        int index = 0;
-        final List<String> testStringTexts = new ArrayList<String>();
-        String testStringTextFromPreferences;
-        while (!(testStringTextFromPreferences = preferences().get(
-		TEST_STRING_TEXT_PREFERENCES_KEY + index, "")).isEmpty()) {
-            testStringTexts.add(testStringTextFromPreferences);
-            index++;
-        }
-        return testStringTexts;
-    }
-
-    static void storePatternText(String patternText) {
-	preferences().put(PATTERN_TEXT_PREFERENCES_KEY, patternText);
-    }
-
-    static String retrievePatternText() {
-	return preferences().get(PATTERN_TEXT_PREFERENCES_KEY, "");
-    }
-
-    private static Preferences preferences() {
-	return preferences;
-    }
-
-    static void removeTestStringText(int i) {
-	storeTestStringText(i, "");
-    }
-
-    static void addTestString() {
-	storeTestStringText(retrieveTestStringTexts().size(), "new text here");
-    }
-
-    static void removeTestString() {
-	storeTestStringText(retrieveTestStringTexts().size() - 1, "");
+    @Override
+    public void actionPerformed(ActionEvent e) {
+	MatcherPreferences.removeTestString();
+	this.patternMatcher.reconfigureTextFieldsForPatternTest();
     }
 
 }

@@ -24,21 +24,17 @@ package de.dhiller.patternmatcher;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
 
-final class AddAnotherTestStringField extends AbstractAction {
-
-    private final PatternMatcher patternMatcher;
+final class AddAnotherTestStringField extends ChangeTextFields {
 
     AddAnotherTestStringField(PatternMatcher patternMatcher) {
-        super("+");
-        this.patternMatcher = patternMatcher;
-        putValue(AbstractAction.LONG_DESCRIPTION, "Add another text area");
+	super("+", "Add another text area", patternMatcher);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MatcherPreferences.storeTestStringText(MatcherPreferences.retrieveTestStringTexts().size(), "new text here");
+        MatcherPreferences.addTestString();
         this.patternMatcher.reconfigureTextFieldsForPatternTest();
     }
+
 }

@@ -85,9 +85,9 @@ public class PatternMatcher extends JFrame {
 	    testStrings.add(testString);
 	    textAreaContainer.add(new JScrollPane(testString),
 		    new GridBagConstraints(1, testStrings.size() - 1, 1, 1,
-			    0.0, 0.0, GridBagConstraints.NORTHWEST,
+			    1.0, 0.0, GridBagConstraints.NORTHWEST,
 			    GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2,
-				    2), 0, 20));
+				    2), 0, 0));
 	}
 	addFillingPanel();
 	upper.invalidate();

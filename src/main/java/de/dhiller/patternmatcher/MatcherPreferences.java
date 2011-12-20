@@ -68,7 +68,8 @@ class MatcherPreferences {
     }
 
     static void addTestString() {
-	storeTestStringText(retrieveTestStringTexts().size(), "new text here");
+	storeTestStringText(retrieveTestStringTexts().size(),
+		"<your text goes here>");
     }
 
     static void removeTestString() {

@@ -77,6 +77,16 @@ public class PatternMatcher extends JFrame {
 	});
     }
 
+    List<String> testStringTexts() {
+	final List<String> testStringTexts = new ArrayList<String>();
+	for (int i = 0, n = testStrings.size(); i < n; i++) {
+	    final JTextArea t = testStrings.get(i);
+	    String testStringText = t.getText();
+	    testStringTexts.add(testStringText);
+	}
+	return testStringTexts;
+    }
+
     void reconfigureTextFieldsForPatternTest() {
 	textAreaContainer.removeAll();
 	textAreaContainer
@@ -194,6 +204,15 @@ public class PatternMatcher extends JFrame {
 	upperButtons.add(new JButton(a), new GridBagConstraints(1, 0, 1, 1,
 		0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
 		new Insets(2, 2, 2, 2), 0, 0));
+    }
+
+    void clearResult() {
+        result.setLineWrap(true);
+        result.setText("");
+    }
+
+    String patternText() {
+        return pattern.getText();
     }
 
 }

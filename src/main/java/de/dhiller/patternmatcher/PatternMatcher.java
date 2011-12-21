@@ -78,19 +78,28 @@ public class PatternMatcher extends JFrame {
 
     void reconfigureTextFieldsForPatternTest() {
 	textAreaContainer.removeAll();
-	textAreaContainer.setLayout(new GridBagLayout());
+	textAreaContainer
+		.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+	textAreaContainer.setLayout(new BoxLayout(textAreaContainer,
+		BoxLayout.PAGE_AXIS));
 	testStrings.clear();
-	for (String testStringText : MatcherPreferences
-		.retrieveTestStringTexts()) {
+	final List<String> testStringTexts = MatcherPreferences
+		.retrieveTestStringTexts();
+	for (int index = 0, n = testStringTexts.size(); index < n; index++) {
+	    final String testStringText = testStringTexts.get(index);
+	    final JLabel label = new JLabel(String.format("Teststring %d",
+		    (index + 1)));
+	    final Box labelBox = Box.createHorizontalBox();
+	    labelBox.add(label);
+	    labelBox.add(Box.createHorizontalGlue());
+	    textAreaContainer.add(labelBox);
 	    final JTextArea testString = newTestStringArea(testStringText);
 	    testStrings.add(testString);
-	    textAreaContainer.add(new JScrollPane(testString),
-		    new GridBagConstraints(1, testStrings.size() - 1, 1, 1,
-			    1.0, 0.0, GridBagConstraints.NORTHWEST,
-			    GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2,
-				    2), 0, 0));
+	    final Box testStringTextBox = Box.createHorizontalBox();
+	    testStringTextBox.add(new JScrollPane(testString));
+	    textAreaContainer.add(testStringTextBox);
 	}
-	addFillingPanel();
+	textAreaContainer.add(Box.createGlue());
 	upper.invalidate();
 	upper.revalidate();
 	upper.repaint();
@@ -107,11 +116,9 @@ public class PatternMatcher extends JFrame {
     }
 
     private void configureResultArea() {
-	resultContainer.setLayout(new GridBagLayout());
 	result.setText("\n\n\n");
-	resultContainer.add(new JScrollPane(result), new GridBagConstraints(0,
-		0, 4, 1, 1.0, 1.0, GridBagConstraints.WEST,
-		GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 20));
+	resultContainer.setLayout(new BorderLayout());
+	resultContainer.add(new JScrollPane(result));
     }
 
     private void configureTestStringsInputArea() {

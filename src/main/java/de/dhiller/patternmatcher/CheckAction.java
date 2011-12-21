@@ -34,9 +34,8 @@ import javax.swing.JTextArea;
 
 final class CheckAction extends AbstractAction {
 
-    /**
-     */
     final PatternMatcher patternMatcher;
+    final StringBuilder result = new StringBuilder();
 
     CheckAction(PatternMatcher patternMatcher) {
 	super("Check match");
@@ -44,7 +43,6 @@ final class CheckAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-	patternMatcher.clearResult();
 	try {
 	    String patternText = patternMatcher.patternText();
 	    MatcherPreferences.storePatternText(patternText);
@@ -65,32 +63,32 @@ final class CheckAction extends AbstractAction {
 			+ testStringText.substring(0,
 				Math.min(testStringText.length(), 20))
 			+ (testStringText.length() >= 20 ? "..." : "");
-		appendResult("--- matches() for " + resultLabel + " ---\n");
+		result.append("--- matches() for " + resultLabel + " ---\n");
 		if (!matcher.matches()) {
-		    appendResult("string does not match regex\n");
+		    result.append("string does not match regex\n");
 		} else {
 		    appendMatchedGroups(matcher);
 		}
 		Matcher matcher2 = compiledPattern.matcher(testStringText);
-		appendResult("\n--- find() for " + resultLabel + " ---\n");
+		result.append("\n--- find() for " + resultLabel + " ---\n");
 		boolean find = matcher2.find();
 		if (!find) {
-		    appendResult("no matches found\n");
+		    result.append("no matches found\n");
 		}
 		int iteration = 1;
 		do {
 		    if (find) {
-			appendResult("Iteration " + iteration++ + ":\n");
+			result.append("Iteration " + iteration++ + ":\n");
 			appendMatchedGroups(matcher2);
-			appendResult("\n");
+			result.append("\n");
 		    }
 		} while (find = matcher2.find());
-		appendResult("\n");
+		result.append("\n");
 	    }
 	    PatternMatcher r = this.patternMatcher;
 	    this.patternMatcher.result.setRows(TextComponentUtilities
 		    .estimatedRows(this.patternMatcher.result));
-	    this.patternMatcher.showResult();
+	    showResult();
 	} catch (Exception ex) {
 	    JTextArea textarea = new JTextArea(ex.getMessage());
 	    textarea.setFont(new Font("Monospaced", Font.PLAIN, 16));
@@ -99,14 +97,14 @@ final class CheckAction extends AbstractAction {
 	}
     }
 
-    void appendResult(final String text) {
-	this.patternMatcher.result.append(text);
+    void showResult() {
+	patternMatcher.showResult(result.toString());
     }
 
     private void appendMatchedGroups(Matcher matcher) {
-	appendResult("Capturing group " + 0 + ": " + matcher.group() + "\n");
+	result.append("Capturing group " + 0 + ": " + matcher.group() + "\n");
 	for (int i = 1, n = matcher.groupCount() + 1; i < n; i++) {
-	    appendResult("Capturing group " + i + ": " + matcher.group(i)
+	    result.append("Capturing group " + i + ": " + matcher.group(i)
 		    + "\n");
 	}
     }

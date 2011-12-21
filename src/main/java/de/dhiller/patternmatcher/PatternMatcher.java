@@ -116,7 +116,26 @@ public class PatternMatcher extends JFrame {
 	upper.repaint();
     }
 
-    void showResult() {
+    void showResult(final String testResult) {
+	clearResult();
+	appendResult(testResult);
+	showResult();
+    }
+
+    String patternText() {
+	return pattern.getText();
+    }
+
+    private void clearResult() {
+	result.setLineWrap(true);
+	result.setText("");
+    }
+
+    private void appendResult(final String text) {
+	result.append(text);
+    }
+
+    private void showResult() {
 	centerAreaTabbedPane.setSelectedIndex(1);
     }
 
@@ -204,15 +223,6 @@ public class PatternMatcher extends JFrame {
 	upperButtons.add(new JButton(a), new GridBagConstraints(1, 0, 1, 1,
 		0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
 		new Insets(2, 2, 2, 2), 0, 0));
-    }
-
-    void clearResult() {
-        result.setLineWrap(true);
-        result.setText("");
-    }
-
-    String patternText() {
-        return pattern.getText();
     }
 
 }

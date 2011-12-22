@@ -35,7 +35,7 @@ import javax.swing.JTextArea;
 final class CheckAction extends AbstractAction {
 
     final PatternMatcher patternMatcher;
-    final StringBuilder result = new StringBuilder();
+    StringBuilder result;
 
     CheckAction(PatternMatcher patternMatcher) {
 	super("Check match");
@@ -43,6 +43,7 @@ final class CheckAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
+	result = new StringBuilder();
 	try {
 	    String patternText = patternMatcher.patternText();
 	    MatcherPreferences.storePatternText(patternText);

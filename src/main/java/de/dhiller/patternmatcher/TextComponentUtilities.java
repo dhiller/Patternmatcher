@@ -32,4 +32,13 @@ class TextComponentUtilities {
     	    .replaceAll("[^\\n]+", "").length()) / 2);
     }
 
+    static int columns(JTextArea testString) {
+	return Math.min((int) (testString.getText().length() * 0.66), 80);
+    }
+
+    static void adjustToText(JTextArea testString) {
+        testString.setColumns(columns(testString));
+        testString.setRows(estimatedRows(testString));
+    }
+
 }

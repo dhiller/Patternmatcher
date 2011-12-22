@@ -54,7 +54,7 @@ final class TextFieldSizeAdapter implements DocumentListener {
 
     private void updateRows(JTextArea testString) {
         PatternMatcher r = this.patternMatcher;
-	testString.setRows(TextComponentUtilities.estimatedRows(testString));
+	TextComponentUtilities.adjustToText(testString);
         this.patternMatcher.pack();
     }
 }
